@@ -1,0 +1,41 @@
+import requests
+import csv
+from collections import defaultdict
+
+# Tenant ID & Token
+tenant = "YOUR_TENANT_ID"
+apiToken = "YOUR_API_TOKEN"
+
+# End Points
+baseURL = "https://www.figma.com/scim/v2/" + tenant
+userURL = baseURL + "/Users"
+
+active = "true"
+
+# List of usernames to be deleted
+file = "figma-members-list-scim.csv"
+usernames = defaultdict(list) # each value in each column is appended to a list
+with open(file) as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        for (k,v) in row.items():
+            usernames[k].append(v)
+            
+usernames = usernames["email"]
+
+for username in usernames:
+    #Build my search query
+    query = "?filter=" + "userName eq \"" + username + "\""
+    response = requests.get(url = userURL + query, headers={"Authorization": apiToken})
+    
+    if (response.json()["totalResults"] > 0):
+        users = response.json()["Resources"]
+        for user in users:
+            user["active"] = active
+            putResponse = requests.put(url = userURL +"/" + user["id"], headers={"Authorization": apiToken, "Content-Type":"application/json"}, json=user)
+            if putResponse.json()["active"] == "false":
+               print("User " + username + " has been deactivated") 
+            if putResponse.json()["active"] == "true":
+               print("User " + username + " has been activated")
+    else:
+        print("User " + username + " not found")
