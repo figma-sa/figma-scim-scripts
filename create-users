@@ -1,0 +1,50 @@
+import requests
+
+# Tenant ID & Token
+tenant = "YOUR_TENANT_ID"
+apiToken = "YOUR_API_TOKEN"
+
+domain = "@example.com"
+
+# End Points
+baseURL = "https://www.figma.com/scim/v2/" + tenant
+userURL = baseURL + "/Users"
+
+def generate_dummy_users(users, prefix, suffix):
+    user_list = []
+    for count in range(1, users + 1):
+        user = {
+            "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User", "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"],
+            "userName": f"{prefix}{count}{suffix}",
+            "name": {
+                "givenName": prefix,
+                "familyName": str(count)
+            },
+            "emails": {
+                "primary": "true",
+                "value": f"{prefix}{count}{suffix}",
+                "type": "work"
+            },
+            "title": "Developer",
+            "displayName": f"{prefix} {count}",
+            "department": "External",
+            "figmaPermission": "viewerRestricted",
+            "figjamPermission": "viewerRestricted"
+        }
+        user_list.append(user)
+    return user_list
+
+
+dummy_users = generate_dummy_users(50, "dummy", domain)
+
+for user in dummy_users:
+    response = requests.post(
+        url=userURL,
+        headers={"Authorization": apiToken, "Content-Type": "application/json"},
+        json=user
+    )
+    if response.status_code == 201:
+        print(f"User {user['userName']} | Figma {response.json()['id']} has been created")
+    else:
+        print(f"User {user['userName']} not created | Code {response.status_code}")
+
