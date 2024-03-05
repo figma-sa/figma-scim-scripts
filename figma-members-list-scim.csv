@@ -1,0 +1,3 @@
+name,email,role,figma_account_type,figjam_account_type,job_title,date_added,figma_date_upgraded,figjam_date_upgraded,last_seen_figma,last_seen_figjam,last_edit_figma,last_edit_figjam,teams,workspace_admin_of,workspace,cost_center_code,division,department,organization,employee_number,manager
+Dummy 1,dummy1@example.com,member,Editor,Viewer-restricted,design,2022-09-01 13:24:04 UTC,2022-09-01 14:52:28 UTC,,2022-09-01 13:24:05 UTC,2022-09-01 13:24:05 UTC,,,"[""Design System"", ""Brand Guide""]","[""DesignOps"", ""Brand Design""]",Brand Design,,,,,,
+Dummy 2,dummy2@example.com,provisional,,,,2022-09-01 11:32:13 UTC,,,,,,,[],,,,,,,,
